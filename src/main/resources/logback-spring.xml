@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<!-- value is the name of the folder where all the files are -->
+	<property name="LOGS" value="./Logs" />
+
+	<!-- Console is for printing data in the console -->
+	<appender name="Console"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<!-- %d = Date, %thread = thread name, -->
+			<Pattern>
+				%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} -
+				%msg%n
+			</Pattern>
+		</layout>
+	</appender>
+
+	<!-- This is for printing in the rolling file -->
+	<appender name="RollingFile"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+		<file>${LOGS}/API-logs.log</file>
+
+		<encoder
+			class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>%d %p %C{1}. [%t] %m%n</Pattern>
+		</encoder>
+
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- Rolling over daily and when file reached 10MB -->
+			<fileNamePattern> ${LOGS}/archive/API-archive-logs-%d{yyyy-MM-dd}.zip
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggerPolicy
+				class="ch.qos.Logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>10MB</maxFileSize>
+			</timeBasedFileNamingAndTriggerPolicy>
+		</rollingPolicy>
+
+	</appender>
+
+	<root level="info">
+		<appender-ref ref="Console" />
+		
+	</root>
+
+	<logger name="com.steven.telleraccountopening" level="trace"
+		additivity="false">
+		<appender-ref ref="RollingFile" />
+		<appender-ref ref="Console" />
+	</logger>
+
+</configuration>
